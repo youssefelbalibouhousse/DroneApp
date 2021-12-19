@@ -1,3 +1,11 @@
+"""
+    auteur : Youss.D.El
+    date : 12/12/21
+
+"""
+
+
+
 import CommandeClavierModule as ccm
 from djitellopy import tello
 import time

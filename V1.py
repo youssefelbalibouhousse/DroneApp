@@ -1,6 +1,13 @@
 import CommandeClavierModule as ccm
 from djitellopy import tello
 import time
+"""
+    auteur : Youss.D.El
+    date : 05/12/21
+
+"""
+
+
 import cv2
 
 ccm.init()
