@@ -2,7 +2,7 @@ import math
 
 import CommandeClavierModule as ccm
 from djitellopy import tello
-import numpy as np
+import numpy as np #calul matriciel
 import cv2
 from time import sleep
 
@@ -13,6 +13,8 @@ cycle = 0.25
 
 arCycle = arSpeed*cycle
 angCycle = angSpeed*cycle
+
+##########################################
 
 
 
@@ -28,20 +30,21 @@ objet1= tello.Tello()
 objet1.connect()
 print(objet1.get_battery())
 
-points = []
+points = [(0,0),(0,0)]
 
 
 
 
 def getClavierInput():
     gd, ar, hb, rot = 0,0,0,0
-    ordre = 50 #metre par seconde
+    ordre = 15 #metre par seconde
     d = 0
+    ordreRot = 50
     global yaw, x,y,a
 
 
     if ccm.getClavier("LEFT"):
-        lr = -ordre
+        lr = ordre
         d = arCycle
         a = -180
     elif ccm.getClavier("RIGHT"):
@@ -64,12 +67,12 @@ def getClavierInput():
     elif ccm.getClavier("b"):
         hb = -ordre
 
-    if ccm.getClavier("q"):
-        rot = ordre
-        yaw -= arCycle
-    elif ccm.getClavier("d"):
-        rot = -ordre
-        yaw += arCycle
+    if ccm.getClavier("d"):
+        rot = ordreRot
+        yaw -= angCycle
+    elif ccm.getClavier("q"):
+        rot = -ordreRot
+        yaw += angCycle
 
     if ccm.getClavier("a"):
         objet1.land()
@@ -86,7 +89,9 @@ def getClavierInput():
 def trace(img,points):
     for point in points:
         cv2.circle( img , point, 5,(0,0,255),cv2.FILLED)
-    cv2.putText(img,f'({points[-1][0]- 500/100},{points[-1][1]- 500/100})m',(points[-1][0]+10, points[-1][1]+30))
+
+    cv2.circle(img, points[-1], 10, (0, 255, 0), cv2.FILLED) # Point vert pour discriminer la position du drone
+    cv2.putText(img,f'({(points[-1][0]- 500)/100},{(points[-1][1]- 500)/100})m',(points[-1][0]+10, points[-1][1]+30),cv2.FONT_HERSHEY_PLAIN,1,(255,0,255),1)
 
 
 
@@ -96,8 +101,10 @@ while True:
 
     img = np.zeros((1000, 1000, 3), np.uint8)
 
-    points.append((valeur[4],valeur[5]))
+    if (points[-1][0] != valeur[4] or points[-1][1] != valeur[5]):
+        points.append((valeur[4],valeur[5]))
+
     trace(img,points)
 
-    cv2.imshow("Output", img)
+    cv2.imshow("carte", img)
     cv2.waitKey(1)

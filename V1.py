@@ -1,11 +1,13 @@
-import CommandeClavierModule as ccm
-from djitellopy import tello
-import time
 """
     auteur : Youss.D.El
     date : 05/12/21
 
 """
+
+import CommandeClavierModule as ccm
+from djitellopy import tello
+import time
+
 
 
 import cv2
@@ -16,6 +18,8 @@ objet1.connect()
 print(objet1.get_battery())
 
 objet1.streamon()
+
+objet1.flip_back()
 
 
 
@@ -47,9 +51,12 @@ def getClavierInput():
         objet1.land()
     if ccm.getClavier("v"):
         objet1.takeoff()
+    if ccm.getClavier("f"):
+        objet1.flip_back()
 
-    if ccm.getClavier("e"):
-        cv2.imwrite(f'Resources/Images')
+    # if ccm.getClavier("e"):
+    #     objet1.flip_back()
+        # cv2.imwrite(f'Ressources/Images')
 
     return [gd, ar, hb, rot]
 
